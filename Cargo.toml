@@ -5,6 +5,9 @@ members = [
     "programs/gpl_session/macros/attribute",
 ]
 
+[workspace.dependencies]
+solana-program = "~1.16"
+
 [profile.release]
 overflow-checks = true
 lto = "fat"
