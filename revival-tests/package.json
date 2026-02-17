@@ -1,0 +1,14 @@
+{
+  "name": "gum-protocol-revival-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha gum.test.js --timeout 60000"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.28.0",
+    "@solana/web3.js": "^1.98.0",
+    "mocha": "^10.2.0",
+    "chai": "^4.3.7",
+    "js-sha3": "^0.8.0"
+  }
+}
