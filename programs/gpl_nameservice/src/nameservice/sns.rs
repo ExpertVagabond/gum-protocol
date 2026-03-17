@@ -32,7 +32,7 @@ impl NameServiceParser for SNSNameService {
 
     fn unpack(record: &AccountInfo) -> Result<SNSNameRecord> {
         // Check disciminator
-        let name_record = SNSNameRecord::try_from_slice(&mut &record.data.borrow_mut()[..])?;
+        let name_record = SNSNameRecord::try_from_slice(&record.data.borrow_mut()[..])?;
         Ok(name_record)
     }
 
