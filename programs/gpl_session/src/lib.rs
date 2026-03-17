@@ -30,7 +30,7 @@ pub mod gpl_session {
         // Set top up to false by default
         let top_up = top_up.unwrap_or(false);
         // Set valid until to 1 hour from now by default
-        let valid_until = valid_until.unwrap_or(Clock::get()?.unix_timestamp + 60 * 60 * 1);
+        let valid_until = valid_until.unwrap_or(Clock::get()?.unix_timestamp + (60 * 60));
         create_session_token_handler(ctx, top_up, valid_until)
     }
 

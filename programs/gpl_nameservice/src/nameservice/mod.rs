@@ -45,7 +45,7 @@ impl NameService {
 pub fn validate(accounts: &[AccountInfo]) -> Result<bool> {
     let record = &accounts[0];
     let name_service =
-        NameService::from_program_id(&record.owner).ok_or(NameServiceError::InvalidNameService)?;
+        NameService::from_program_id(record.owner).ok_or(NameServiceError::InvalidNameService)?;
     name_service.validate(accounts)
 }
 

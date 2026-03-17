@@ -42,7 +42,7 @@ pub struct CreatePost<'info> {
         authority = profile.authority.key()
     )]
     pub session_token: Option<Account<'info, SessionToken>>,
-    
+
     pub authority: Signer<'info>,
     // The system program
     pub system_program: Program<'info, System>,
@@ -69,7 +69,7 @@ pub fn create_post_handler(
     emit!(PostNew {
         post: *post.to_account_info().key,
         profile: *ctx.accounts.profile.to_account_info().key,
-        random_hash: random_hash,
+        random_hash,
         metadata_uri: post.metadata_uri.clone(),
         timestamp: Clock::get()?.unix_timestamp,
     });
@@ -195,7 +195,7 @@ pub fn create_comment_handler(
     emit!(PostCommentNew {
         post: *post.to_account_info().key,
         profile: *ctx.accounts.profile.to_account_info().key,
-        random_hash: random_hash,
+        random_hash,
         metadata_uri: post.metadata_uri.clone(),
         reply_to: *ctx.accounts.reply_to.to_account_info().key,
         timestamp: Clock::get()?.unix_timestamp,

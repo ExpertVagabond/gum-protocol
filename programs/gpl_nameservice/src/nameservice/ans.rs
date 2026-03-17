@@ -32,7 +32,7 @@ impl NameServiceParser for ANSNameService {
     fn unpack(record: &AccountInfo) -> Result<ANSNameRecord> {
         // discriminators are unique to programs, since we have validations below.
         // unless we hard code the discriminator value we will have to ignore them for now.
-        let name_record = ANSNameRecord::try_from_slice(&mut &record.data.borrow_mut()[8..])?;
+        let name_record = ANSNameRecord::try_from_slice(&record.data.borrow_mut()[8..])?;
         Ok(name_record)
     }
 
