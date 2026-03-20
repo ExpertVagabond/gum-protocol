@@ -2,9 +2,16 @@ use crate::constants::*;
 use crate::errors::GumError;
 use crate::state::MAX_LEN_URI;
 use crate::state::{Badge, Issuer, Profile, Schema};
-use std::str::FromStr;
 
 use anchor_lang::prelude::*;
+
+// FIXME: Replace with a proper admin key before mainnet deployment.
+// Hardcoded admin pubkey bytes (9fyuDiDxZJ6Nfey7EhZchYkF11M6gUhfXvUyB1oFWZmX)
+// to avoid unwrap() panics from Pubkey::from_str at runtime.
+const ADMIN_PUBKEY: Pubkey = Pubkey::new_from_array([
+    128, 217, 231, 79, 250, 121, 166, 174, 25, 141, 117, 230, 220, 70, 246, 164,
+    186, 158, 150, 19, 213, 250, 45, 185, 59, 207, 238, 239, 163, 176, 33, 190,
+]);
 
 // Create a badge
 
@@ -191,9 +198,8 @@ pub fn create_schema_handler(
 ) -> Result<()> {
     require_eq!(
         ctx.accounts.authority.key(),
-        // FIXME: Move this to constant byte and importantly use a different key before deploying.
-        // This is a quick hack to test the patch.
-        Pubkey::from_str("9fyuDiDxZJ6Nfey7EhZchYkF11M6gUhfXvUyB1oFWZmX").unwrap(),
+        // FIXME: Move this to a proper admin key before mainnet deployment.
+        ADMIN_PUBKEY,
         GumError::UnauthorizedSigner
     );
     require!(metadata_uri.len() <= MAX_LEN_URI, GumError::URITooLong);
@@ -228,9 +234,8 @@ pub struct UpdateSchema<'info> {
 pub fn update_schema_handler(ctx: Context<UpdateSchema>, metadata_uri: String) -> Result<()> {
     require_eq!(
         ctx.accounts.authority.key(),
-        // FIXME: Move this to constant byte and importantly use a different key before deploying.
-        // This is a quick hack to test the patch.
-        Pubkey::from_str("9fyuDiDxZJ6Nfey7EhZchYkF11M6gUhfXvUyB1oFWZmX").unwrap(),
+        // FIXME: Move this to a proper admin key before mainnet deployment.
+        ADMIN_PUBKEY,
         GumError::UnauthorizedSigner
     );
     require!(metadata_uri.len() <= MAX_LEN_URI, GumError::URITooLong);
@@ -261,9 +266,8 @@ pub struct DeleteSchema<'info> {
 pub fn delete_schema_handler(ctx: Context<DeleteSchema>) -> Result<()> {
     require_eq!(
         ctx.accounts.authority.key(),
-        // FIXME: Move this to constant byte and importantly use a different key before deploying.
-        // This is a quick hack to test the patch.
-        Pubkey::from_str("9fyuDiDxZJ6Nfey7EhZchYkF11M6gUhfXvUyB1oFWZmX").unwrap(),
+        // FIXME: Move this to a proper admin key before mainnet deployment.
+        ADMIN_PUBKEY,
         GumError::UnauthorizedSigner
     );
     Ok(())
@@ -330,9 +334,8 @@ pub struct VerifyIssuer<'info> {
 pub fn verify_issuer_handler(ctx: Context<VerifyIssuer>) -> Result<()> {
     require_eq!(
         ctx.accounts.signer.key(),
-        // FIXME: Move this to constant byte and importantly use a different key before deploying.
-        // This is a quick hack to test the patch.
-        Pubkey::from_str("9fyuDiDxZJ6Nfey7EhZchYkF11M6gUhfXvUyB1oFWZmX").unwrap(),
+        // FIXME: Move this to a proper admin key before mainnet deployment.
+        ADMIN_PUBKEY,
         GumError::InvalidSignerToVerify
     );
 

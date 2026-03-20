@@ -1,4 +1,5 @@
-use crate::state::Profile;
+use crate::errors::ProfileMetadataError;
+use crate::state::{Profile, MAX_LEN_URI};
 use anchor_lang::prelude::*;
 
 use crate::constants::*;
@@ -41,6 +42,9 @@ pub fn create_profile_handler(
     random_hash: [u8; 32],
     metadata_uri: String,
 ) -> Result<()> {
+    // Validate metadata_uri length
+    require!(metadata_uri.len() <= MAX_LEN_URI, ProfileMetadataError::URITooLong);
+
     let profile = &mut ctx.accounts.profile;
     profile.set_inner(Profile {
         authority: *ctx.accounts.authority.key,
@@ -84,6 +88,9 @@ pub struct UpdateProfile<'info> {
 
 // Handler to update a Profile account
 pub fn update_profile_handler(ctx: Context<UpdateProfile>, metadata_uri: String) -> Result<()> {
+    // Validate metadata_uri length
+    require!(metadata_uri.len() <= MAX_LEN_URI, ProfileMetadataError::URITooLong);
+
     let profile = &mut ctx.accounts.profile;
     profile.metadata_uri = metadata_uri;
     // Emit a profile update event
