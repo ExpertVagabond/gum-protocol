@@ -47,6 +47,15 @@ fn validate_reaction(reaction_type: &str) -> Result<()> {
     Ok(())
 }
 
+/// Validate a random hash is not all zeros (prevents deterministic collisions).
+fn validate_random_hash(hash: &[u8; 32]) -> Result<()> {
+    require!(
+        hash.iter().any(|&b| b != 0),
+        errors::GumError::UnauthorizedSigner
+    );
+    Ok(())
+}
+
 #[program]
 pub mod gpl_core {
 
@@ -58,6 +67,7 @@ pub mod gpl_core {
         random_hash: [u8; 32],
         metadata_uri: String,
     ) -> Result<()> {
+        validate_random_hash(&random_hash)?;
         validate_uri(&metadata_uri)?;
         create_profile_handler(ctx, random_hash, metadata_uri)
     }
@@ -79,6 +89,7 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_random_hash(&random_hash)?;
         validate_uri(&metadata_uri)?;
         create_post_handler(ctx, metadata_uri, random_hash)
     }
@@ -95,6 +106,7 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_random_hash(&random_hash)?;
         validate_uri(&metadata_uri)?;
         create_comment_handler(ctx, metadata_uri, random_hash)
     }
@@ -163,6 +175,7 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_random_hash(&random_hash)?;
         validate_uri(&metadata_uri)?;
         create_schema_handler(ctx, metadata_uri, random_hash)
     }
