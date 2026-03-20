@@ -44,7 +44,17 @@ fn validate_reaction(reaction_type: &str) -> Result<()> {
         !reaction_type.is_empty() && reaction_type.len() <= MAX_REACTION_LENGTH,
         errors::GumError::ReactionTypeTooLong
     );
+    // Reject control characters in reaction strings
+    require!(
+        !reaction_type.bytes().any(|b| b < 0x20 && b != b'\t'),
+        errors::GumError::ReactionTypeTooLong
+    );
     Ok(())
+}
+
+/// Sanitize error output for external consumption — strip internal details.
+fn sanitize_error_msg(msg: &str) -> String {
+    msg.lines().next().unwrap_or("Unknown error").chars().take(200).collect()
 }
 
 /// Validate a random hash is not all zeros (prevents deterministic collisions).
