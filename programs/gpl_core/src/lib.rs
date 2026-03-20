@@ -19,6 +19,34 @@ solana_security_txt::security_txt! {
     source_code: "https://github.com/gumhq/gpl"
 }
 
+// ---- Security: input validation ----
+/// Maximum metadata URI length (prevents excessive on-chain storage).
+const MAX_URI_LENGTH: usize = 256;
+/// Maximum reaction type length.
+const MAX_REACTION_LENGTH: usize = 64;
+
+/// Validate a metadata URI is within bounds and contains no control characters.
+fn validate_uri(uri: &str) -> Result<()> {
+    require!(
+        !uri.is_empty() && uri.len() <= MAX_URI_LENGTH,
+        errors::GumError::URITooLong
+    );
+    require!(
+        !uri.bytes().any(|b| b < 0x20 && b != b'\t'),
+        errors::GumError::URITooLong
+    );
+    Ok(())
+}
+
+/// Validate a reaction type string.
+fn validate_reaction(reaction_type: &str) -> Result<()> {
+    require!(
+        !reaction_type.is_empty() && reaction_type.len() <= MAX_REACTION_LENGTH,
+        errors::GumError::ReactionTypeTooLong
+    );
+    Ok(())
+}
+
 #[program]
 pub mod gpl_core {
 
@@ -30,11 +58,13 @@ pub mod gpl_core {
         random_hash: [u8; 32],
         metadata_uri: String,
     ) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         create_profile_handler(ctx, random_hash, metadata_uri)
     }
 
     // update a profile account
     pub fn update_profile(ctx: Context<UpdateProfile>, metadata_uri: String) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         update_profile_handler(ctx, metadata_uri)
     }
 
@@ -49,11 +79,13 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         create_post_handler(ctx, metadata_uri, random_hash)
     }
 
     // update a post
     pub fn update_post(ctx: Context<UpdatePost>, metadata_uri: String) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         update_post_handler(ctx, metadata_uri)
     }
 
@@ -63,6 +95,7 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         create_comment_handler(ctx, metadata_uri, random_hash)
     }
 
@@ -83,7 +116,7 @@ pub mod gpl_core {
 
     // create a reaction account with reaction type
     pub fn create_reaction(ctx: Context<CreateReaction>, reaction_type: String) -> Result<()> {
-        // By default, reactions are not custom
+        validate_reaction(&reaction_type)?;
         create_reaction_handler(ctx, reaction_type)
     }
 
@@ -94,11 +127,13 @@ pub mod gpl_core {
 
     // create a badge account
     pub fn create_badge(ctx: Context<CreateBadge>, metadata_uri: String) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         create_badge_handler(ctx, metadata_uri)
     }
 
     // update a badge
     pub fn update_badge(ctx: Context<UpdateBadge>, metadata_uri: String) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         update_badge_handler(ctx, metadata_uri)
     }
 
@@ -128,11 +163,13 @@ pub mod gpl_core {
         metadata_uri: String,
         random_hash: [u8; 32],
     ) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         create_schema_handler(ctx, metadata_uri, random_hash)
     }
 
     // update a schema
     pub fn update_schema(ctx: Context<UpdateSchema>, metadata_uri: String) -> Result<()> {
+        validate_uri(&metadata_uri)?;
         update_schema_handler(ctx, metadata_uri)
     }
 
