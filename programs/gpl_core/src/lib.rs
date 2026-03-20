@@ -14,7 +14,7 @@ solana_security_txt::security_txt! {
     name: "gpl_core",
     project_url: "https://gum.fun",
     contacts: "email:hello@gum.fun,twitter:@gumisfunn",
-    policy: "",
+    policy: "https://github.com/gumhq/gpl/blob/master/SECURITY.md",
     preferred_languages: "en",
     source_code: "https://github.com/gumhq/gpl"
 }
